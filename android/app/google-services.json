@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "819980564424",
+    "project_id": "poc-signon",
+    "storage_bucket": "poc-signon.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819980564424:android:8f0154106af47785b572fd",
+        "android_client_info": {
+          "package_name": "com.example.poc_reg_task"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "819980564424-pp8ghjv7n0mako4s6clanvfb3v2kgn4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvHVzWgxsVCqST7N4jOMHggDH3vfBmDXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "819980564424-pp8ghjv7n0mako4s6clanvfb3v2kgn4n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -41,6 +41,7 @@ class _AuthPageState extends State<AuthPage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -48,127 +49,144 @@ class _AuthPageState extends State<AuthPage> {
         ),
         centerTitle: true,
       ),
-      body: GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Form(
-          key: _formKey,
+      body: SingleChildScrollView(
+        physics: const ScrollPhysics(),
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
           child: Container(
-            margin: const EdgeInsets.only(left: 30, right: 30),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                if (!_isLogin)
-                  TextFormField(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(50),
-                    ],
-                    key: const ValueKey('username'),
-                    validator: (value) {
-                      if (value!.isEmpty || value.length < 4) {
-                        return 'Enter valid Username please';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _username = value!;
-                    },
-                    keyboardType: TextInputType.text,
-                    decoration: const InputDecoration(
-                      labelText: 'UserName',
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 5,
-                        horizontal: 10,
+            margin: const EdgeInsets.only(top: 100),
+            child: Form(
+              key: _formKey,
+              child: Container(
+                margin: const EdgeInsets.only(left: 30, right: 30),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    if (!_isLogin)
+                      TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(50),
+                        ],
+                        key: const ValueKey('username'),
+                        validator: (value) {
+                          if (value!.isEmpty || value.length < 4) {
+                            return 'Enter valid Username please';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _username = value!;
+                        },
+                        keyboardType: TextInputType.text,
+                        decoration: const InputDecoration(
+                          labelText: 'UserName',
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 5,
+                            horizontal: 10,
+                          ),
+                        ),
+                      ),
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(50),
+                      ],
+                      key: const ValueKey('Email'),
+                      validator: (value) {
+                        _email = value!;
+                        if (value.isEmpty || !value.contains('@')) {
+                          return;
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _email = value ?? _email;
+                      },
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 5,
+                          horizontal: 10,
+                        ),
+                      ),
+                      // controller: !_isLogin ? _emailController : null,
+                    ),
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(50),
+                      ],
+                      key: const ValueKey('Password'),
+                      // controller: !_isLogin ? _passwordController : null,
+                      validator: (value) {
+                        _password = value!;
+                        if (value.isEmpty || value.length < 7) {
+                          return '';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _password = value!;
+                      },
+                      obscureText: _passwordVisible ? false : true,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        suffixIcon: IconButton(
+                          icon: _passwordVisible
+                              ? const Icon(Icons.visibility)
+                              : const Icon(Icons.visibility_off),
+                          onPressed: () {
+                            setState(
+                              () {
+                                _passwordVisible = !_passwordVisible;
+                              },
+                            );
+                          },
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
                       ),
                     ),
-                  ),
-                TextFormField(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(50),
-                  ],
-                  key: const ValueKey('Email'),
-                  validator: (value) {
-                    _email = value!;
-                    if (value.isEmpty || !value.contains('@')) {
-                      return;
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _email = value ?? _email;
-                  },
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 5,
-                      horizontal: 10,
+                    const SizedBox(
+                      height: 50,
                     ),
-                  ),
-                  // controller: !_isLogin ? _emailController : null,
-                ),
-                TextFormField(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(50),
-                  ],
-                  key: const ValueKey('Password'),
-                  // controller: !_isLogin ? _passwordController : null,
-                  validator: (value) {
-                    _password = value!;
-                    if (value.isEmpty || value.length < 7) {
-                      return '';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _password = value!;
-                  },
-                  obscureText: _passwordVisible ? false : true,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    suffixIcon: IconButton(
-                      icon: _passwordVisible
-                          ? const Icon(Icons.visibility)
-                          : const Icon(Icons.visibility_off),
-                      onPressed: () {
-                        setState(
-                          () {
-                            _passwordVisible = !_passwordVisible;
-                          },
-                        );
-                      },
+                    ElevatedButton(
+                      onPressed: _submit,
+                      style: ElevatedButton.styleFrom(
+                        fixedSize:
+                            !_isLogin ? Size(width, 35) : Size(width, 35),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      child: Text(
+                        !_isLogin ? 'Register' : 'Login',
+                      ),
                     ),
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  ),
+                    Container(
+                      height: MediaQuery.of(context).size.height / 4,
+                      alignment: Alignment.bottomCenter,
+                      child: InkWell(
+                        child: Text(
+                          !_isLogin ? 'Login Instead' : 'SignUp',
+                        ),
+                        onHover: (_) {
+                          // when hover show finger
+                        },
+                        onTap: () {
+                          setState(
+                            () {
+                              _isLogin = !_isLogin;
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  onPressed: _submit,
-                  child: Text(
-                    !_isLogin ? 'Register' : 'Login',
-                  ),
-                ),
-                const SizedBox(
-                  height: 60,
-                ),
-                InkWell(
-                  child: Text(
-                    !_isLogin ? 'Login Instead' : 'SignUp',
-                  ),
-                  onHover: (_) {
-                    // when hover show finger
-                  },
-                  onTap: () {
-                    setState(
-                      () {
-                        _isLogin = !_isLogin;
-                      },
-                    );
-                  },
-                ),
-              ],
+              ),
             ),
           ),
         ),

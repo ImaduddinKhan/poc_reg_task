@@ -12,11 +12,15 @@ class WelcomeHomePage extends StatefulWidget {
 class _WelcomeHomePageState extends State<WelcomeHomePage> {
   final _db = FirebaseDatabase.instance.ref().child("users");
 
-  Stream<DatabaseEvent> getData() {
+  Future<DatabaseEvent> getData() {
     var user = FirebaseAuth.instance.currentUser!;
     final dbRef =
         FirebaseDatabase.instance.ref().child('users').child(user.uid);
-    return dbRef.onValue;
+    return dbRef.once();
+  }
+
+  showData() {
+    _db.once().then((snapshot) => print(snapshot.snapshot.value));
   }
 
   @override

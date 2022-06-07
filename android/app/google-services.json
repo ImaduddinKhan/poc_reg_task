@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "819980564424",
+    "firebase_url": "https://poc-signon-default-rtdb.firebaseio.com",
     "project_id": "poc-signon",
     "storage_bucket": "poc-signon.appspot.com"
   },

@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:poc_reg_task/pages/signon_page.dart';
 import 'package:poc_reg_task/pages/welcom_home_page.dart';
 
+import 'firebase_options.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 

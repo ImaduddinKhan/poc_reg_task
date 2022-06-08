@@ -10,43 +10,95 @@ class WelcomeHomePage extends StatefulWidget {
 }
 
 class _WelcomeHomePageState extends State<WelcomeHomePage> {
-  final _db = FirebaseDatabase.instance.ref().child("users");
+  String userId = (FirebaseAuth.instance.currentUser!).uid;
 
-  Future<DatabaseEvent> getData() {
-    var user = FirebaseAuth.instance.currentUser!;
-    final dbRef =
-        FirebaseDatabase.instance.ref().child('users').child(user.uid);
-    return dbRef.once();
-  }
-
-  showData() {
-    _db.once().then((snapshot) => print(snapshot.snapshot.value));
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Welcome Home'),
-        centerTitle: true,
-      ),
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'LoggedIn Successfully',
-              textAlign: TextAlign.center,
-            ),
-            TextButton(
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
-                },
-                child: const Text('SignOut'))
-          ],
+        appBar: AppBar(
+          title: const Text('Welcome Home'),
+          centerTitle: true,
         ),
-      ),
-    );
+        body: FutureBuilder(
+          future: FirebaseDatabase.instance
+              .ref()
+              .child('users')
+              .child(userId)
+              .get(),
+          builder: (context, AsyncSnapshot<DataSnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            var data = (snapshot.data!.value as dynamic);
+            return SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Welcome ${data['username']}!',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    'Your Name',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    data['username'],
+                    style: const TextStyle(fontSize: 17),
+                  ),
+                  const Text(
+                    'Your Email',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    data['email'],
+                    style: const TextStyle(fontSize: 17),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        FirebaseAuth.instance.signOut();
+                      },
+                      child: const Text('SignOut'))
+                ],
+              ),
+            );
+          },
+        )
+
+        // SizedBox(
+        //   width: MediaQuery.of(context).size.width,
+        //   child: Column(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: [
+        //       const Text(
+        //         'LoggedIn Successfully',
+        //         textAlign: TextAlign.center,
+        //       ),
+        //       Text(getCurrentOnLineUserInfo().toString()),
+        //       TextButton(
+        //           onPressed: () {
+        //             FirebaseAuth.instance.signOut();
+        //           },
+        //           child: const Text('SignOut'))
+        //     ],
+        //   ),
+        // ),
+        );
   }
 }
